@@ -1,4 +1,5 @@
 import re
+import random
 class Game():
     def __init__(self):
         self.turn: str = 'X'
@@ -17,10 +18,12 @@ class Game():
         }
     
     def switch_player(self):
-        if self.turn == 'X':
-            self.turn = 'O'
-        else:
-            self.turn = 'X'
+        self.turn = 'X' if self.turn == 'O' else 'O'
+    # def switch_player(self):
+    #     if self.turn == 'X':
+    #         self.turn = 'O'
+    #     else:
+    #         self.turn = 'X'
 
     def check_a_win(self, p1, p2, p3):
         b = self.board
@@ -38,7 +41,7 @@ class Game():
         return w1 or w2 or w3 or w4 or w5 or w6 or w7 or w8
 
     def prompt(self):
-        move = input(f"Player {self.turn}, choose a legal move (ex.: A1): ")
+        move = input(f"Player {self.turn}, choose a legal move (ex.: {random.choice('ABC')}{random.choice('123')}): ")
         valid_move = re.match(r'^[a|b|c][1|2|3]$', move.lower())
         # check move validity, re-prompt if invalid
         while not valid_move or self.board[move.lower()] != ' ':
@@ -47,18 +50,16 @@ class Game():
             valid_move = re.match(r'^[a|b|c][1|2|3]$', move.lower())
         # play the valid move
         self.board[move.lower()] = self.turn
-        # check for a winner
+        # check for a winner/tie
         if self.check_for_winner():
             self.winner = self.turn
+        elif all(val != ' ' for val in self.board.values()):
+            self.tie = True
         else:
             self.switch_player()
 
     def show_message(self):
-        if self.tie:
-            print('wow another tie. how inspriring')
-        # add logic for checking X/O wins
-        else:
-            print(f"It's {self.turn}'s turn:")
+        print(f"\n\nIt's {self.turn}'s turn:")
 
     def show_board(self):
         b = self.board
@@ -71,16 +72,18 @@ class Game():
    ---------
 3  {b['a3']} | {b['b3']} | {b['c3']}
         """)
-        # call method to prompt for a move
     
     def play_game(self):
         print('Pelcome po Py-Pac-Poe!\n')
-        while not self.winner:
+        while (not self.winner) and (not self.tie):
             self.show_message()
             self.show_board()
             self.prompt()
         self.show_board()
-        print(f"Congratulations! {self.winner} wins.")
+        if self.tie:
+            print('wow a tie. crazy')
+        else:  
+            print(f"Congratulations! {self.winner} wins.")
 
 
 # instantiate and play
