@@ -22,19 +22,36 @@ class Game():
         else:
             self.turn = 'X'
 
-    def check_for_winner(self, p1, p2, p3):
+    def check_a_win(self, p1, p2, p3):
         b = self.board
         return b[p1] if b[p1] == b[p2] == b[p3] != ' ' else False
+
+    def check_for_winner(self):
+        w1 = self.check_a_win('a1', 'a2', 'a3')
+        w2 = self.check_a_win('b1', 'b2', 'b3')
+        w3 = self.check_a_win('c1', 'c2', 'c3')
+        w4 = self.check_a_win('a1', 'b1', 'c1')
+        w5 = self.check_a_win('a2', 'b2', 'c2')
+        w6 = self.check_a_win('a3', 'b3', 'c3')
+        w7 = self.check_a_win('a1', 'b2', 'c3')
+        w8 = self.check_a_win('a3', 'b2', 'c1')
+        return w1 or w2 or w3 or w4 or w5 or w6 or w7 or w8
 
     def prompt(self):
         move = input(f"Player {self.turn}, choose a legal move (ex.: A1): ")
         valid_move = re.match(r'^[a|b|c][1|2|3]$', move.lower())
+        # check move validity, re-prompt if invalid
         while not valid_move or self.board[move.lower()] != ' ':
             print(f"Move {move} is not legal.")
             move = input(f"Player {self.turn}, choose a LEGAL move: ")
             valid_move = re.match(r'^[a|b|c][1|2|3]$', move.lower())
+        # play the valid move
         self.board[move.lower()] = self.turn
-        self.switch_player()
+        # check for a winner
+        if self.check_for_winner():
+            self.winner = self.turn
+        else:
+            self.switch_player()
 
     def show_message(self):
         if self.tie:
@@ -62,6 +79,8 @@ class Game():
             self.show_message()
             self.show_board()
             self.prompt()
+        self.show_board()
+        print(f"Congratulations! {self.winner} wins.")
 
 
 # instantiate and play
