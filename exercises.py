@@ -1,5 +1,6 @@
 import re
 import random
+
 class Game():
     def __init__(self):
         self.turn: str = 'X'
@@ -19,11 +20,6 @@ class Game():
     
     def switch_player(self):
         self.turn = 'X' if self.turn == 'O' else 'O'
-    # def switch_player(self):
-    #     if self.turn == 'X':
-    #         self.turn = 'O'
-    #     else:
-    #         self.turn = 'X'
 
     def check_a_win(self, p1, p2, p3):
         b = self.board
@@ -89,4 +85,3 @@ class Game():
 # instantiate and play
 g = Game()
 g.play_game()
-# print(g.check_for_winner('a1', 'a2', 'a3'))
